@@ -18,10 +18,10 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, "access") {
 
     async validate(req, payload) {
         const accessToken = req.headers.authorization.split(" ")[1]
-        let isExist = await this.cacheManager.get(
-            `accessToken:${accessToken}`
+        let isExpired = await this.cacheManager.get(
+            `accessToken : ${accessToken}`
             )
-        if (isExist) {
+        if (isExpired) {
             throw new UnauthorizedException("이미 로그아웃한 사용자입니다.")
         }
         return {
