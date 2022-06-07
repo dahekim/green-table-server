@@ -1,0 +1,18 @@
+version: '3.3'
+
+services:
+    vegan-backend: 
+        build:
+            context: .
+            dockerfile: Dockerfile
+        volumes:
+            - ./src:/vegan_backend/src
+        env_file:
+            - ./.env.dev
+        ports:
+            - 3000:3000
+    vegan-redis:
+        image: redis:latest
+        ports:
+            - 6379:6379 
+

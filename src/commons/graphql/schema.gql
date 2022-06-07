@@ -1,0 +1,224 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type RecipesIngredients {
+  id: String!
+  name: String!
+  recipes: [Recipes!]!
+}
+
+type RecipesTag {
+  id: String!
+  name: String!
+  recipes: [Recipes!]!
+}
+
+type RecipesImage {
+  image_id: Int!
+  mainImage: String!
+  url: String!
+  description: String!
+  recipes: Recipes!
+}
+
+type Recipes {
+  id: String!
+  title: String!
+  summary: String!
+  types: CATEGORY_TYPES
+  cookTime: Int!
+  level: COOKING_LEVEL
+  serve: Int!
+  recipesImages: [RecipesImage!]!
+  recipesScraps: [RecipeScrapHistory!]!
+  user: User!
+  ingredients: [RecipesIngredients!]!
+  recipesTags: [RecipesTag!]!
+  scrapCount: Int!
+  replyCount: Int!
+  createdAt: DateTime!
+}
+
+enum CATEGORY_TYPES {
+  NON_CHECKED
+  VEGAN
+  LACTO
+  OVO
+  LACTO_OVO
+  PESCO
+  POLLO
+}
+
+enum COOKING_LEVEL {
+  SIMPLE
+  NORMAL
+  DIFFICULT
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type RecipeScrapHistory {
+  scrap_id: String!
+  user: User!
+  recipes: Recipes!
+  scraped: Boolean!
+}
+
+type User {
+  user_id: String!
+  email: String!
+  name: String!
+  phone: String!
+  address: String
+  addressDetail: String
+  type: VEGAN_TYPE
+  nickname: String
+  isPro: CLASS_TYPE
+  certImage: String
+  certUrl: String
+  isSubs: SUB_TYPE
+  SubsHistory: Int
+  startDate: String
+  endDate: String
+  profilePic: String
+  scrapCount: RecipeScrapHistory
+  deletedAt: DateTime
+}
+
+enum VEGAN_TYPE {
+  NON_Vegan
+  Vegan
+  Lacto
+  Ovo
+  Lacto_Ovo
+  Pesco
+  Pollo
+}
+
+enum CLASS_TYPE {
+  PRO
+  COMMON
+}
+
+enum SUB_TYPE {
+  NON_SUB
+  BASIC
+  PREMIUM
+}
+
+type PaymentTransaction {
+  id: String!
+  impUid: String
+  amount: Int
+  status: TRANSACTION_STATUS_ENUM!
+  user: User!
+}
+
+enum TRANSACTION_STATUS_ENUM {
+  PAYMENT
+  CANCEL
+}
+
+type RecipesReply {
+  reply_id: String!
+  contents: String
+  recipes: Recipes!
+  user: User!
+  createdAt: DateTime!
+}
+
+type Query {
+  fetchTransactionAll: [PaymentTransaction!]!
+  fetchimpUidwithUserid(user_id: String!): PaymentTransaction!
+  fetchReplies(id: String!, page: Int): [RecipesReply!]!
+  fetchRecipes(page: Int): [Recipes!]!
+  fetchRecipesCount(page: Int): Int!
+  fetchRecipe(recipes_id: String!): Recipes!
+  fetchRecipeTypes(vegan_types: String!, page: Int): [Recipes!]!
+  fetchRecipeTypesPopular(vegan_types: String!, page: Int): [Recipes!]!
+  fetchMyRecipe(user_id: String!, page: Int): [Recipes!]!
+  fetchRecipeIsPro(isPro: String!, page: Int): [Recipes!]!
+  fetchPopularRecipes(page: Int): [Recipes!]!
+  searchRecipes(input: String!, page: Int): [Recipes!]!
+  fetchMyScrapHistory(user_id: String!): [Recipes!]!
+  fetchUser: User!
+  fetchUsers: [User!]!
+  fetchUsersWithDel: [User!]!
+}
+
+type Mutation {
+  login(email: String!, password: String!): String!
+  logout: String!
+  restoreAccessToken: String!
+  createBasicPayment(impUid: String!, amount: Float!): String!
+  createPremiumPayment(impUid: String!, amount: Float!): String!
+  cancelPaymentTransaction(impUid: String!): PaymentTransaction!
+  createReply(contents: String!, id: String!): String!
+  updateReply(reply_id: String!, recipe_id: String!, contents: String!): String!
+  deleteReply(reply_id: String!, recipe_id: String!): String!
+  createRecipe(createRecipesInput: CreateRecipesInput!): Recipes!
+  updateRecipe(recipe_id: String!, updateRecipesInput: UpdateRecipesInput!): Recipes!
+  deleteRecipe(recipe_id: String!): Boolean!
+  uploadMainImages(files: [Upload!]!): [String!]!
+  uploadRecipeImages(files: [Upload!]!): [String!]!
+  deleteRecipeImages(id: String!): [String!]!
+  clickScrap(id: String!): RecipeScrapHistory!
+  createUser(email: String!, password: String!, name: String!, phone: String!): User!
+  getToken(phone: String!): String!
+  checkValidToken(phone: String!, token: String!): String!
+  updateUser(user_id: String!, updateUserInput: UpdateUserInput!): User!
+  updatePassword(user_id: String!, password: String!): User!
+  uploadProfileImage(file: Upload!): String!
+  deleteProfileImage(user_id: String!): String!
+  uploadCertificationImage(file: Upload!): String!
+  deleteUser(user_id: String!): User!
+}
+
+input CreateRecipesInput {
+  title: String!
+  summary: String!
+  types: [String!]!
+  mainImage: [String!]!
+  url: [String!]!
+  description: [String!]!
+  cookTime: Int!
+  level: [String!]!
+  serve: Int!
+  ingredients: [String!]!
+  recipesTags: [String!]!
+}
+
+input UpdateRecipesInput {
+  title: String
+  summary: String
+  types: [String!]
+  mainImage: [String!]
+  url: [String!]
+  description: [String!]
+  cookTime: Int
+  level: [String!]
+  serve: Int
+  ingredients: [String!]
+  recipesTags: [String!]
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UpdateUserInput {
+  name: String
+  phone: String
+  address: String
+  addressDetail: String
+  type: String
+  nickname: String
+  isPro: String
+  certImage: String
+  certUrl: String
+  isSubs: Boolean
+  profilePic: String
+}
