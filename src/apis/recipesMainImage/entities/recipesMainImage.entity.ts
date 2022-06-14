@@ -9,8 +9,8 @@ export class RecipesMainImage {
     @Field(() => Int)
     mainImage_id: number
 
-    @Column({ default: " " })
-    @Field(() => String, { defaultValue: " ", nullable: false })
+    @Column()
+    @Field(() => String, { nullable: true })
     MainUrl: string
 
     @CreateDateColumn()
