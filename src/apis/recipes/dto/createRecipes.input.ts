@@ -12,10 +12,10 @@ export class CreateRecipesInput {
     types: string;
 
     @Field(() => [String])
-    mainImage: string[];
+    mainUrl: string[];
 
     @Field(() => [String])
-    url: string[];
+    contentsUrl: string[];
 
     @Field(() => [String])
     description: string[];

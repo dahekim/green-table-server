@@ -249,7 +249,7 @@ export class RecipesService {
 
     async create({ createRecipesInput }, currentUser) {
         try {
-            const { MainUrl, contentsUrl, description, ingredients, recipesTags, ...recipes } =
+            const { mainUrl, contentsUrl, description, ingredients, recipesTags, ...recipes } =
                 createRecipesInput;
 
             const user = await this.userRepository.findOne(
@@ -299,10 +299,10 @@ export class RecipesService {
                 ingredients: ingredientTags,
                 recipesTags: recipeTags,
             });
-
-            for (let i = 0; i < MainUrl.length; i++) {
+            
+            for (let i = 0; i < mainUrl.length; i++) {
                 await this.recipesMainImageRepository.save({
-                    MainUrl: MainUrl[i],
+                    mainUrl: mainUrl[i],
                     recipes: result
                 });
             }

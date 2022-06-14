@@ -14,11 +14,16 @@ type RecipesTag {
   recipes: [Recipes!]!
 }
 
-type RecipesImage {
-  image_id: Int!
-  mainImage: String!
-  url: String!
+type RecipesContentsImage {
+  contentsImage_id: Int!
+  contentsUrl: String!
   description: String!
+  recipes: Recipes!
+}
+
+type RecipesMainImage {
+  mainImage_id: Int!
+  MainUrl: String!
   recipes: Recipes!
 }
 
@@ -30,7 +35,8 @@ type Recipes {
   cookTime: Int!
   level: COOKING_LEVEL
   serve: Int!
-  recipesImages: [RecipesImage!]!
+  recipesMainImage: [RecipesMainImage!]!
+  recipesContentsImage: [RecipesContentsImage!]!
   recipesScraps: [RecipeScrapHistory!]!
   user: User!
   ingredients: [RecipesIngredients!]!
@@ -86,7 +92,6 @@ type User {
   endDate: String
   profilePic: String
   scrapCount: RecipeScrapHistory
-  deletedAt: DateTime
 }
 
 enum VEGAN_TYPE {
@@ -140,6 +145,7 @@ type Query {
   fetchRecipe(recipes_id: String!): Recipes!
   fetchRecipeTypes(vegan_types: String!, page: Int): [Recipes!]!
   fetchRecipeTypesPopular(vegan_types: String!, page: Int): [Recipes!]!
+  fetchRecipesTypeIsPro(vegan_types: String!, page: Int): [Recipes!]!
   fetchMyRecipe(user_id: String!, page: Int): [Recipes!]!
   fetchRecipeIsPro(isPro: String!, page: Int): [Recipes!]!
   fetchPopularRecipes(page: Int): [Recipes!]!
@@ -181,8 +187,8 @@ input CreateRecipesInput {
   title: String!
   summary: String!
   types: [String!]!
-  mainImage: [String!]!
-  url: [String!]!
+  mainUrl: [String!]!
+  contentsUrl: [String!]!
   description: [String!]!
   cookTime: Int!
   level: [String!]!
@@ -195,8 +201,8 @@ input UpdateRecipesInput {
   title: String
   summary: String
   types: [String!]
-  mainImage: [String!]
-  url: [String!]
+  mainUrl: [String!]
+  contentsUrl: [String!]
   description: [String!]
   cookTime: Int
   level: [String!]
