@@ -234,7 +234,7 @@ export class RecipesService {
             .where({ types })
             .andWhere('user.isPro = :isPro', { isPro: "PRO" })
             .orderBy('recipes.scrapCount','DESC' )
-            .addOrderBy('recipes.createdAt', 'DESC')
+            .orderBy('recipes.createdAt', 'DESC')
 
         if (page) {
             const result = await temp.take(12).skip((page-1) * 12).getMany()

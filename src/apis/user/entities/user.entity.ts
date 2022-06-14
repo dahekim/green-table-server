@@ -9,6 +9,12 @@ import {
     UpdateDateColumn
 } from "typeorm";
 
+
+export enum Role {
+    USER = 'USER',
+    ADMIN = 'ADMIN'
+}
+
 export enum CLASS_TYPE {
     PRO = 'PRO',
     COMMON = 'COMMON',
@@ -42,6 +48,10 @@ registerEnumType(SUB_TYPE, {
     name: 'SUB_TYPE',
 })
 
+registerEnumType(Role, {
+    name:'Role',
+})
+
 @Entity()
 @ObjectType()
 export class User {
@@ -63,6 +73,10 @@ export class User {
     @Column({ nullable: false })
     @Field(() => String!, )
     phone: string
+
+    @Column({type: "enum", enum: Role, default: Role.USER})
+    @Field(() => Role)
+    role?: Role
 
     @Column({ default: null })
     @Field(() => String, { nullable: true })
