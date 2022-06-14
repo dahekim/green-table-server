@@ -142,6 +142,7 @@ type Query {
   fetchReplies(id: String!, page: Int): [RecipesReply!]!
   fetchRecipes(page: Int): [Recipes!]!
   fetchRecipesCount(page: Int): Int!
+  fetchRecipesTypesCount(vegan_types: String!, page: Int): Int!
   fetchRecipe(recipes_id: String!): Recipes!
   fetchRecipeTypes(vegan_types: String!, page: Int): [Recipes!]!
   fetchRecipeTypesPopular(vegan_types: String!, page: Int): [Recipes!]!
