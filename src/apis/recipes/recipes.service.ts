@@ -20,11 +20,11 @@ export class RecipesService {
         @InjectRepository(Recipes)
         private readonly recipesRepository: Repository<Recipes>,
 
-        @InjectRepository(RecipesContentsImage)
-        private readonly recipesContentsImageRepository: Repository<RecipesContentsImage>,
-
         @InjectRepository(RecipesMainImage)
         private readonly recipesMainImageRepository: Repository<RecipesMainImage>,
+
+        @InjectRepository(RecipesContentsImage)
+        private readonly recipesContentsImageRepository: Repository<RecipesContentsImage>,
 
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
@@ -41,7 +41,6 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -64,7 +63,6 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -87,7 +85,6 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -111,7 +108,6 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -137,7 +133,6 @@ export class RecipesService {
             .select('recipes')
             .from(Recipes, 'recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -156,7 +151,6 @@ export class RecipesService {
             .select('recipes')
             .from(Recipes, 'recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -182,7 +176,6 @@ export class RecipesService {
             .select('recipes')
             .from(Recipes, 'recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -209,7 +202,6 @@ export class RecipesService {
             .select('recipes')
             .from(Recipes, 'recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -235,7 +227,6 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            // .leftJoinAndSelect('recipes.recipesImages', 'image')
             .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
             .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
@@ -309,7 +300,7 @@ export class RecipesService {
                 recipesTags: recipeTags,
             });
 
-            for (let i = 0; i < contentsUrl.length; i++) {
+            for (let i = 0; i < MainUrl.length; i++) {
                 await this.recipesMainImageRepository.save({
                     MainUrl: MainUrl[i],
                     recipes: result
@@ -337,15 +328,15 @@ export class RecipesService {
     }
 
     async update({ id, updateRecipesInput }) {
-        const registedRecipe = await this.recipesRepository.findOne({
+        const prevRecipe = await this.recipesRepository.findOne({
             where: { id }
         });
 
-        const newRegistRecipe = {
-            ...registedRecipe,
+        const result = {
+            ...prevRecipe,
             ...updateRecipesInput,
         }
-        return await this.recipesRepository.save(newRegistRecipe);
+        return await this.recipesRepository.save(result);
     }
 
     async delete({ id, currentUser }) {

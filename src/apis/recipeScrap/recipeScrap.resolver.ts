@@ -29,12 +29,4 @@ export class RecipeScrapResolver{
     ){
         return await this.recipeScarpService.scrap({recipe_id, currentUser})
     }
-
-    // @Query(() => Recipes)
-    // async fetchUserScrap(
-    //     @Args('id') recipe_id: string,
-    //     @CurrentUser() currentUser: ICurrentUser,
-    // ){
-    //     return await this.recipeScarpService.fetchUserScrap({recipe_id, currentUser})
-    // }
 }
