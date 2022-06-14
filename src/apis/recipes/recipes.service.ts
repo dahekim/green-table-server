@@ -401,8 +401,13 @@ export class RecipesService {
     async search({ input, page }) {
         const results = getRepository(Recipes)
             .createQueryBuilder('recipes')
+            .leftJoinAndSelect('recipes.user', 'user')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'tags')
+            .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
+            .leftJoinAndSelect('recipesScraps.user', 'users')
 
         if (input === null || input === "") {
             throw new BadRequestException("검색어를 입력해주세요.")

@@ -23,7 +23,7 @@ type RecipesContentsImage {
 
 type RecipesMainImage {
   mainImage_id: Int!
-  MainUrl: String!
+  MainUrl: String
   recipes: Recipes!
 }
 
@@ -38,7 +38,7 @@ type Recipes {
   recipesMainImage: [RecipesMainImage!]!
   recipesContentsImage: [RecipesContentsImage!]!
   recipesScraps: [RecipeScrapHistory!]!
-  user: User!
+  user: User
   ingredients: [RecipesIngredients!]!
   recipesTags: [RecipesTag!]!
   scrapCount: Int!
