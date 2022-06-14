@@ -4,22 +4,14 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, PrimaryG
 
 @Entity()
 @ObjectType()
-export class RecipesImage {
+export class RecipesMainImage {
     @PrimaryGeneratedColumn()
     @Field(() => Int)
-    image_id: number
+    mainImage_id: number
 
     @Column({ default: " " })
     @Field(() => String, { defaultValue: " ", nullable: false })
-    mainImage: string;
-
-    @Column({ default: " " })
-    @Field(() => String, { defaultValue: " ", nullable: false })
-    url: string
-
-    @Column({ length: 5000, default: " " })
-    @Field(() => String, { defaultValue: " ", nullable: false })
-    description: string
+    MainUrl: string
 
     @CreateDateColumn()
     createdAt: Date
@@ -30,7 +22,7 @@ export class RecipesImage {
     @UpdateDateColumn()
     updatedAt: Date
 
-    @ManyToOne(() => Recipes, (recipes) => recipes.recipesImages, { onDelete: "CASCADE" })
+    @ManyToOne(() => Recipes, (recipes) => recipes.recipesMainImage, { onDelete: "CASCADE" })
     @Field(() => Recipes)
     recipes: Recipes
 }

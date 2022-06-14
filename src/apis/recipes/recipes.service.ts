@@ -4,12 +4,11 @@ import { FileUpload } from "graphql-upload";
 import { Brackets, getConnection, getRepository, Repository } from "typeorm";
 import { User } from "../user/entities/user.entity";
 import { Recipes } from "./entities/recipes.entity";
-import { getToday } from 'src/commons/libraries/utils'
 import { Storage } from '@google-cloud/storage'
-import { v4 as uuidv4 } from 'uuid'
-import { RecipesImage } from "../recipesImage/entities/recipesImage.entity";
+import { RecipesContentsImage } from "../recipesContentsImage/entities/recipesContentsImage.entity";
 import { RecipesIngredients } from "../recipesIngrediants/entities/recipesIngrediants.entity";
 import { RecipesTag } from "../recipesTag/entities/recipesTag.entity";
+import { RecipesMainImage } from "../recipesMainImage/entities/recipesMainImage.entity";
 
 interface IFile {
     files: FileUpload[]
@@ -21,8 +20,11 @@ export class RecipesService {
         @InjectRepository(Recipes)
         private readonly recipesRepository: Repository<Recipes>,
 
-        @InjectRepository(RecipesImage)
-        private readonly recipesImageRepository: Repository<RecipesImage>,
+        @InjectRepository(RecipesContentsImage)
+        private readonly recipesContentsImageRepository: Repository<RecipesContentsImage>,
+
+        @InjectRepository(RecipesMainImage)
+        private readonly recipesMainImageRepository: Repository<RecipesMainImage>,
 
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
@@ -39,7 +41,9 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            .leftJoinAndSelect('recipes.recipesImages', 'image')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
@@ -60,7 +64,9 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            .leftJoinAndSelect('recipes.recipesImages', 'image')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
@@ -81,7 +87,9 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            .leftJoinAndSelect('recipes.recipesImages', 'image')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
@@ -103,7 +111,9 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            .leftJoinAndSelect('recipes.recipesImages', 'image')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
@@ -127,7 +137,9 @@ export class RecipesService {
             .select('recipes')
             .from(Recipes, 'recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            .leftJoinAndSelect('recipes.recipesImages', 'image')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
@@ -144,13 +156,14 @@ export class RecipesService {
             .select('recipes')
             .from(Recipes, 'recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            .leftJoinAndSelect('recipes.recipesImages', 'image')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
             .leftJoinAndSelect('recipesScraps.user', 'users')
             .where({ types })
-            // .where('recipes.types =: types', { types: `${types}` })
             .orderBy('recipes.createdAt', 'DESC')
 
         if (page) {
@@ -169,13 +182,14 @@ export class RecipesService {
             .select('recipes')
             .from(Recipes, 'recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            .leftJoinAndSelect('recipes.recipesImages', 'image')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
             .leftJoinAndSelect('recipesScraps.user', 'users')
             .where({ types })
-            // .where('recipes.types =: types', { types: `${types}` })
             .orderBy('recipes.scrapCount','DESC' )
             .addOrderBy('recipes.createdAt', 'DESC')
 
@@ -193,7 +207,9 @@ export class RecipesService {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
-            .leftJoinAndSelect('recipes.recipesImages', 'image')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
             .leftJoinAndSelect('recipes.ingredients', 'ingredients')
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
@@ -214,7 +230,7 @@ export class RecipesService {
 
     async create({ createRecipesInput }, currentUser) {
         try {
-            const { mainImage, url, description, ingredients, recipesTags, ...recipes } =
+            const { MainUrl, contentsUrl, description, ingredients, recipesTags, ...recipes } =
                 createRecipesInput;
 
             const user = await this.userRepository.findOne(
@@ -258,22 +274,28 @@ export class RecipesService {
                 }
             }
 
-            const registRecipe = await this.recipesRepository.save({
+            const result = await this.recipesRepository.save({
                 ...recipes,
                 user: user,
                 ingredients: ingredientTags,
                 recipesTags: recipeTags,
             });
 
-            for (let i = 0; i < url.length; i++) {
-                await this.recipesImageRepository.save({
-                    url: url[i],
-                    description: description[i],
-                    mainImage: mainImage[i],
-                    recipes: registRecipe
+            for (let i = 0; i < contentsUrl.length; i++) {
+                await this.recipesMainImageRepository.save({
+                    MainUrl: MainUrl[i],
+                    recipes: result
                 });
             }
-            return await registRecipe;
+
+            for (let i = 0; i < contentsUrl.length; i++) {
+                await this.recipesContentsImageRepository.save({
+                    contentsUrl: contentsUrl[i],
+                    description: description[i],
+                    recipes: result
+                });
+            }
+            return await result;
 
         } catch (error) {
             console.log(error)

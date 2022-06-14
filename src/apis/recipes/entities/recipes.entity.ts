@@ -3,8 +3,9 @@ import { RecipesIngredients } from "src/apis/recipesIngrediants/entities/recipes
 import { User } from "src/apis/user/entities/user.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { RecipesTag } from "src/apis/recipesTag/entities/recipesTag.entity";
-import { RecipesImage } from "src/apis/recipesImage/entities/recipesImage.entity";
+import { RecipesContentsImage } from "src/apis/recipesContentsImage/entities/recipesContentsImage.entity";
 import { RecipeScrapHistory } from "src/apis/recipeScrap/entities/recipeScrap.entity";
+import { RecipesMainImage } from "src/apis/recipesMainImage/entities/recipesMainImage.entity";
 
 export enum CATEGORY_TYPES {
     NON_CHECKED = 'NON_CHECKED',
@@ -60,9 +61,13 @@ export class Recipes {
     @Field(() => Int)
     serve: number;
 
-    @OneToMany(() => RecipesImage, (recipesImages) => recipesImages.recipes, { cascade: true })
-    @Field(() => [RecipesImage])
-    recipesImages: RecipesImage[];
+    @OneToMany(()=> RecipesMainImage, (recipesMainImage)=>recipesMainImage.recipes, {cascade: true} )
+    @Field(()=> [RecipesMainImage])
+    recipesMainImage: RecipesMainImage[]
+
+    @OneToMany(() => RecipesContentsImage, (recipesContentsImage) => recipesContentsImage.recipes, { cascade: true })
+    @Field(() => [RecipesContentsImage])
+    recipesContentsImage: RecipesContentsImage[];
 
     @OneToMany(() => RecipeScrapHistory, (recipeScrapsHistory) => recipeScrapsHistory.recipes)
     @Field(() => [RecipeScrapHistory])
