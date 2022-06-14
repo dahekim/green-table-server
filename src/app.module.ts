@@ -35,10 +35,12 @@ import { RecipeScrapModule } from './apis/recipeScrap/recipeScrap.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: "10.39.240.4",
+      // host: 'vegan-database',
       port: 3306,
       username: 'root',
       password: 'root',
       database: 'veganTable',
+      // database: 'vegan-docker02',
       entities: [__dirname + '/apis/**/*.entity.*'],
       synchronize: true,
       logging: true,

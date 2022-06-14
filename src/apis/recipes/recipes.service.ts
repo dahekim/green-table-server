@@ -149,7 +149,8 @@ export class RecipesService {
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
             .leftJoinAndSelect('recipesScraps.user', 'users')
-            .where({ types })
+            // .where({ types })
+            .where('recipes.types =: types', { types })
             .orderBy('recipes.createdAt', 'DESC')
 
         if (page) {
@@ -173,7 +174,8 @@ export class RecipesService {
             .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
             .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
             .leftJoinAndSelect('recipesScraps.user', 'users')
-            .where({ types })
+            // .where({ types })
+            .where('recipes.types LIKE =:', { types })
             .orderBy('recipes.scrapCount','DESC' )
             .addOrderBy('recipes.createdAt', 'DESC')
 
