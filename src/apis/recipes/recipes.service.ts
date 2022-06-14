@@ -202,6 +202,34 @@ export class RecipesService {
         }   
     }
 
+    // 타입별 전문가 레시피 조회 
+    async fetchRecipesTypeIsPro({ types, page }){
+        const temp = await getConnection()
+            .createQueryBuilder()
+            .select('recipes')
+            .from(Recipes, 'recipes')
+            .leftJoinAndSelect('recipes.user', 'user')
+            // .leftJoinAndSelect('recipes.recipesImages', 'image')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
+            .leftJoinAndSelect('recipes.ingredients', 'ingredients')
+            .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
+            .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
+            .leftJoinAndSelect('recipesScraps.user', 'users')
+            .where({ types })
+            .andWhere('user.isPro = :isPro', { isPro: "PRO" })
+            .orderBy('recipes.scrapCount','DESC' )
+            .addOrderBy('recipes.createdAt', 'DESC')
+
+        if (page) {
+            const result = await temp.take(12).skip((page-1) * 12).getMany()
+            return result
+        } else {
+            const result = await temp.getMany()
+            return result
+        }   
+    }
+
     // 내가 쓴 레시피 조회
     async fetchMyRecipe({ user_id, page }) {
         const temp = await getRepository(Recipes)
@@ -383,7 +411,7 @@ export class RecipesService {
         } else {
             const result = await results.orderBy('recipes.createdAt', 'DESC')
                 .getMany()
-            return result
+            return result? result: false
         }
     }
 }

@@ -53,6 +53,14 @@ export class RecipesResolver {
         return await this.recipesService.fetchRecipeTypesPopular({ types, page });
     }
 
+    @Query(()=>[Recipes])
+    async fetchRecipesTypeIsPro(
+        @Args('vegan_types') types: string,
+        @Args({name:'page', nullable: true, type: ()=> Int}) page?: number,
+    ){
+        return await this.recipesService.fetchRecipesTypeIsPro({types,page})
+    }
+
     @UseGuards(GqlAuthAccessGuard)
     @Query(() => [Recipes])
     async fetchMyRecipe(
