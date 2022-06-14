@@ -80,6 +80,29 @@ export class RecipesService {
         }    
     }
 
+    // 채식 타입별 레시피 갯수 카운트
+    async fetchRecipesTypesCount({types, page}) {
+        const temp = await getRepository(Recipes)
+            .createQueryBuilder('recipes')
+            .leftJoinAndSelect('recipes.user', 'user')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
+            .leftJoinAndSelect('recipes.ingredients', 'ingredients')
+            .leftJoinAndSelect('recipes.recipesTags', 'recipesTags')
+            .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
+            .leftJoinAndSelect('recipesScraps.user', 'users')
+            .where({ types })
+            .orderBy('recipes.createdAt', 'DESC')
+
+        if (page) {
+            const result = await temp.take(12).skip((page-1) * 12).getCount()
+            return result
+        } else {
+            const result = await temp.getCount()
+            return result
+        }    
+    }
+
     // 인기 레시피 조회
     async fetchPopularRecipes(page) {
         const temp = await getRepository(Recipes)
