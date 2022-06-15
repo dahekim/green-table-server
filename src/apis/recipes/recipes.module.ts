@@ -4,7 +4,7 @@ import { JwtAccessStrategy } from "src/commons/auth/jwt-access.strategy";
 import { RecipeScrapHistory } from "../recipeScrap/entities/recipeScrap.entity";
 import { RecipeScarpService } from "../recipeScrap/recipeScrap.service";
 import { RecipesContentsImage } from "../recipesContentsImage/entities/recipesContentsImage.entity";
-import {RecipesMainImage} from "../recipesMainImage/entities/recipesMainImage.entity"
+import { RecipesMainImage } from "../recipesMainImage/entities/recipesMainImage.entity"
 import { RecipesIngredients } from "../recipesIngrediants/entities/recipesIngrediants.entity";
 import { RecipesTag } from "../recipesTag/entities/recipesTag.entity";
 import { RecipesReply } from "../recipiesReply/entities/recipes.reply.entity";

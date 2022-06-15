@@ -11,7 +11,7 @@ export class RecipesMainImage {
 
     @Column({ default: " " })
     @Field(() => String, { defaultValue: " ", nullable: false })
-    MainUrl: string
+    mainUrl: string
 
     @CreateDateColumn()
     createdAt: Date

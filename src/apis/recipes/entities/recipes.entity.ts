@@ -68,7 +68,7 @@ export class Recipes {
     @OneToMany(() => RecipesContentsImage, (recipesContentsImage) => recipesContentsImage.recipes, { cascade: true })
     @Field(() => [RecipesContentsImage])
     recipesContentsImage: RecipesContentsImage[];
-
+    
     @OneToMany(() => RecipeScrapHistory, (recipeScrapsHistory) => recipeScrapsHistory.recipes)
     @Field(() => [RecipeScrapHistory])
     recipesScraps: RecipeScrapHistory[];
