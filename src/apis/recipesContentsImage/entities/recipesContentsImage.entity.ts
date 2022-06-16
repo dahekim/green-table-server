@@ -10,7 +10,7 @@ export class RecipesContentsImage {
     contentsImage_id: number
 
     @Column({ default: " " })
-    @Field(() => String, { defaultValue: " ", nullable: false })
+    @Field(() => String, { defaultValue: " ", nullable: true })
     contentsUrl: string
 
     @Column({ length: 5000, default: " " })

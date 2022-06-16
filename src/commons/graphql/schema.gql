@@ -16,14 +16,14 @@ type RecipesTag {
 
 type RecipesContentsImage {
   contentsImage_id: Int!
-  contentsUrl: String!
+  contentsUrl: String
   description: String!
   recipes: Recipes!
 }
 
 type RecipesMainImage {
   mainImage_id: Int!
-  MainUrl: String
+  mainUrl: String!
   recipes: Recipes!
 }
 
@@ -79,6 +79,7 @@ type User {
   email: String!
   name: String!
   phone: String!
+  role: Role!
   address: String
   addressDetail: String
   type: VEGAN_TYPE
@@ -92,6 +93,11 @@ type User {
   endDate: String
   profilePic: String
   scrapCount: RecipeScrapHistory
+}
+
+enum Role {
+  USER
+  ADMIN
 }
 
 enum VEGAN_TYPE {
@@ -148,9 +154,10 @@ type Query {
   fetchRecipeTypesPopular(vegan_types: String!, page: Int): [Recipes!]!
   fetchRecipesTypeIsPro(vegan_types: String!, page: Int): [Recipes!]!
   fetchMyRecipe(user_id: String!, page: Int): [Recipes!]!
-  fetchRecipeIsPro(isPro: String!, page: Int): [Recipes!]!
+  fetchRecipeIsPro(page: Int): [Recipes!]!
   fetchPopularRecipes(page: Int): [Recipes!]!
   searchRecipes(input: String!, page: Int): [Recipes!]!
+  fetchSearchResultCount(input: String!, page: Int): Int!
   fetchMyScrapHistory(user_id: String!): [Recipes!]!
   fetchUser: User!
   fetchUsers: [User!]!

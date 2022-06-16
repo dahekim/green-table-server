@@ -80,10 +80,9 @@ export class RecipesResolver {
 
     @Query(() => [Recipes])
     async fetchRecipeIsPro(
-        @Args('isPro') isPro: string,
         @Args({ name: 'page', nullable: true, type: () => Int,}) page?: number,
     ) {
-        return await this.recipesService.fetchRecipeIsPro({ isPro, page});
+        return await this.recipesService.fetchRecipeIsPro(page);
     }
 
     @Query(() => [Recipes])
@@ -152,5 +151,13 @@ export class RecipesResolver {
         @Args({ name: 'page', nullable: true, type: () => Int, }) page?: number,
     ) {
         return this.recipesService.search({ input, page })
+    }
+
+    @Query(() => Int)
+    async fetchSearchResultCount(
+        @Args('input') input: string,
+        @Args({ name: 'page', nullable: true, type: () => Int,}) page?: number,
+    ) {
+        return await this.recipesService.fetchSearchResultCount({input, page});
     }
 }

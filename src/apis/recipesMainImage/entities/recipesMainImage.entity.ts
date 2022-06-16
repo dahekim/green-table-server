@@ -18,7 +18,7 @@ export class RecipesMainImage {
 
     @DeleteDateColumn()
     deletedAt: Date
-
+    
     @UpdateDateColumn()
     updatedAt: Date
 

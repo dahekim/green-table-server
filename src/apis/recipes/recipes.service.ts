@@ -127,7 +127,7 @@ export class RecipesService {
     }
 
     // 전문가 레시피 조회
-    async fetchRecipeIsPro({ isPro, page }) {
+    async fetchRecipeIsPro(page) {
         const temp = await getRepository(Recipes)
             .createQueryBuilder('recipes')
             .leftJoinAndSelect('recipes.user', 'user')
@@ -424,13 +424,45 @@ export class RecipesService {
         }
 
         if (page) {
-            const result = await results.orderBy('recipes.createdAt', 'DESC')
-                .getMany()
+            const result = await results.orderBy('recipes.createdAt', 'DESC').getMany()
             return result
         } else {
-            const result = await results.orderBy('recipes.createdAt', 'DESC')
-                .getMany()
-            return result? result: false
+            const result = await results.orderBy('recipes.createdAt', 'DESC').getMany()
+            return result? result : false
         }
+    }
+
+    async fetchSearchResultCount({input, page}) {
+        const temp = await getRepository(Recipes)
+            .createQueryBuilder('recipes')
+            .leftJoinAndSelect('recipes.user', 'user')
+            .leftJoinAndSelect('recipes.recipesMainImage', 'mainPic')
+            .leftJoinAndSelect('recipes.recipesContentsImage', 'contentsPic')
+            .leftJoinAndSelect('recipes.ingredients', 'ingredients')
+            .leftJoinAndSelect('recipes.recipesTags', 'tags')
+            .leftJoinAndSelect('recipes.recipesScraps', 'recipesScraps')
+            .leftJoinAndSelect('recipesScraps.user', 'users')
+            
+            if (input === null || input === "") {
+                throw new BadRequestException("검색어가 입력되지 않았습니다.")
+            }
+    
+            if (input) {
+                temp.where(
+                    new Brackets((qb) => {
+                        qb.where('recipes.title LIKE :title', { title: `%${input}%` })
+                            .orWhere('ingredients.name LIKE :name', { name: `%${input}%` })
+                            .orWhere('tags.name LIKE :name', { name: `%${input}%` })
+                    })
+                )
+            }
+
+        if (page) {
+            const result = await temp.take(12).skip((page-1) * 12).getCount()
+            return result
+        } else {
+            const result = await temp.getCount()
+            return result
+        }    
     }
 }
