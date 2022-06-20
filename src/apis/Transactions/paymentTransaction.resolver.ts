@@ -57,9 +57,7 @@ export class PaymentTransactionResolver {
         const token = await this.iamportService.getToken();
         await this.iamportService.checkPaid({ impUid, amount, token });
         await this.paymentTransactionService.checkDuplicate({ impUid });
-        console.log("🍎🍎🍎🍎🍎🍎 중복확인~")
         await this.paymentTransactionService.createTransaction({ impUid, amount, currentUser });
-        console.log("🌽🌽🌽🌽🌽🌽 결제고~")
         
         await this.userRepository.save({
             user_id: currentUser.user_id,
@@ -68,9 +66,6 @@ export class PaymentTransactionResolver {
             startDate: String(getToday()),
             endDate:String(oneMonthLater()) ,
         })
-        console.log("🍕🍕🍕🍕🍕 저장완~ 베이직~~ ")
-        // const user_id = currentUser.user_id
-        // return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
         return "베이직 구독 결제가 완료되었습니다."
     }
 
@@ -84,9 +79,7 @@ export class PaymentTransactionResolver {
         const token = await this.iamportService.getToken();
         await this.iamportService.checkPaid({ impUid, amount, token });
         await this.paymentTransactionService.checkDuplicate({ impUid });
-        console.log("🍎🍎🍎🍎🍎🍎 중복확인~")
         await this.paymentTransactionService.createTransaction({ impUid, amount, currentUser });
-        console.log("🌽🌽🌽🌽🌽🌽 결제고~")
         
         await this.userRepository.save({
             user_id: currentUser.user_id,
@@ -95,9 +88,6 @@ export class PaymentTransactionResolver {
             startDate: String(getToday()),
             endDate:String(oneMonthLater()) 
         })
-        console.log("🍕🍕🍕🍕🍕 저장완~ 프리미엄~~ ")
-        // const user_id = currentUser.user_id
-        // return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
         return "프리미엄 구독 결제가 완료되었습니다."
     }
 
