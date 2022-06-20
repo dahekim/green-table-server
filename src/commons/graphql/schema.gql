@@ -144,7 +144,8 @@ type RecipesReply {
 
 type Query {
   fetchTransactionAll: [PaymentTransaction!]!
-  fetchimpUidwithUserid(user_id: String!): PaymentTransaction!
+  fetchimpUidwithUserid(user_id: String!): [PaymentTransaction!]!
+  fetchMyPayment: [PaymentTransaction!]!
   fetchReplies(id: String!, page: Int): [RecipesReply!]!
   fetchRecipes(page: Int): [Recipes!]!
   fetchRecipesCount(page: Int): Int!

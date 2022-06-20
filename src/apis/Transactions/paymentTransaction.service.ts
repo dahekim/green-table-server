@@ -18,18 +18,18 @@ export class PaymentTransactionService {
 
     async fetchTransactionAll() {
         return await getRepository(PaymentTransaction)
-            .createQueryBuilder('paymenttransaction')
-            .leftJoinAndSelect('paymenttransaction.user', 'user')
-            .orderBy('paymenttransaction.createdAt', 'DESC')
+            .createQueryBuilder('paymentTransaction')
+            .leftJoinAndSelect('paymentTransaction.user', 'user')
+            .orderBy('paymentTransaction.createdAt', 'DESC')
             .getMany();
     }
 
     async fetchimpUidwithUserid({ user_id }) {
         return await getRepository(PaymentTransaction)
-            .createQueryBuilder('paymenttransaction')
-            .leftJoinAndSelect('paymenttransaction.user', 'user')
-            .where('user.user_id = :userUserId', { user_id })
-            .orderBy('paymenttransaction.createdAt', 'DESC')
+            .createQueryBuilder('paymentTransaction')
+            .leftJoinAndSelect('paymentTransaction.user', 'user')
+            .where('user.user_id = :user_id', { user_id })
+            .orderBy('paymentTransaction.createdAt', 'DESC')
             .getMany();
     }
 
