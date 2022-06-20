@@ -66,8 +66,9 @@ export class PaymentTransactionResolver {
             startDate: String(getToday()),
             endDate:String(oneMonthLater()) ,
         })
-        const user_id = currentUser.user_id
-        return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
+        // const user_id = currentUser.user_id
+        // return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
+        return "베이직 구독 결제가 완료되었습니다."
     }
 
     @UseGuards(GqlAuthAccessGuard)
@@ -89,8 +90,9 @@ export class PaymentTransactionResolver {
             startDate: String(getToday()),
             endDate:String(oneMonthLater()) 
         })
-        const user_id = currentUser.user_id
-        return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
+        // const user_id = currentUser.user_id
+        // return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
+        return "프리미엄 구독 결제가 완료되었습니다."
     }
 
     @UseGuards(GqlAuthAccessGuard)
