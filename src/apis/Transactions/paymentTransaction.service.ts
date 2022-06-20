@@ -37,7 +37,6 @@ export class PaymentTransactionService {
         const queryRunner = await this.connection.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction('SERIALIZABLE');
-        console.log("🐞🐞🐞🐞🐞🐞🐞" + "어떻게된거야")
         try {
             const paymentTransaction = await this.paymentTransactionRepository.create({
                 impUid,

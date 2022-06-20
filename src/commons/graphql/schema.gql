@@ -168,8 +168,8 @@ type Mutation {
   login(email: String!, password: String!): String!
   logout: String!
   restoreAccessToken: String!
-  createBasicPayment(impUid: String!, amount: Float!): String!
-  createPremiumPayment(impUid: String!, amount: Float!): String!
+  createBasicPayment(impUid: String!, amount: Float!): PaymentTransaction!
+  createPremiumPayment(impUid: String!, amount: Float!): PaymentTransaction!
   cancelPaymentTransaction(impUid: String!): PaymentTransaction!
   createReply(contents: String!, id: String!): String!
   updateReply(reply_id: String!, recipe_id: String!, contents: String!): String!

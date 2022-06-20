@@ -7,3 +7,7 @@ export const getToday = () => {
 
     return `${yyyy}/${mm}/${dd}`
 }
+
+export const oneMonthLater = () => {
+    return  new Date( new Date().getFullYear(), new Date().getMonth()+2, new Date().getDate())
+}

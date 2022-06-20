@@ -3,6 +3,7 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GqlAuthAccessGuard } from "src/commons/auth/gql-auth.guard";
 import { CurrentUser, ICurrentUser } from "src/commons/auth/gql-user.param";
+import { getToday, oneMonthLater } from "src/commons/libraries/utils";
 import { Repository } from "typeorm";
 import { IamportService } from "../iamport/iamport.service";
 import { PaymentTransaction } from "../Transactions/entities/paymentTransaction.entity";
@@ -18,6 +19,9 @@ export class PaymentTransactionResolver {
         
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+
+        @InjectRepository(PaymentTransaction)
+        private readonly paymentRepository: Repository<PaymentTransaction>,
     ) {}
 
     @UseGuards(GqlAuthAccessGuard)
@@ -35,7 +39,16 @@ export class PaymentTransactionResolver {
     }
 
     @UseGuards(GqlAuthAccessGuard)
-    @Mutation(() => String)
+    @Query(() => PaymentTransaction)
+    async fetchMyPayment(
+        @CurrentUser() currentUser: ICurrentUser,
+    ) {
+        const user_id = currentUser.user_id
+        return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
+    }
+
+    @UseGuards(GqlAuthAccessGuard)
+    @Mutation(() => PaymentTransaction)
     async createBasicPayment(
         @Args('impUid') impUid: string,
         @Args('amount') amount: number,
@@ -49,14 +62,16 @@ export class PaymentTransactionResolver {
         await this.userRepository.save({
             user_id: currentUser.user_id,
             SubsHistory: 1,
-            isSubs: SUB_TYPE.BASIC
+            isSubs: SUB_TYPE.BASIC,
+            startDate: String(getToday()),
+            endDate:String(oneMonthLater()) ,
         })
-
-        return "베이직 구독 결제가 완료되었습니다."
+        const user_id = currentUser.user_id
+        return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
     }
 
     @UseGuards(GqlAuthAccessGuard)
-    @Mutation(() => String)
+    @Mutation(() => PaymentTransaction)
     async createPremiumPayment(
         @Args('impUid') impUid: string,
         @Args('amount') amount: number,
@@ -70,9 +85,12 @@ export class PaymentTransactionResolver {
         await this.userRepository.save({
             user_id: currentUser.user_id,
             SubsHistory: 1,
-            isSubs: SUB_TYPE.PREMIUM
+            isSubs: SUB_TYPE.PREMIUM,
+            startDate: String(getToday()),
+            endDate:String(oneMonthLater()) 
         })
-        return "프리미엄 구독 결제가 완료되었습니다."
+        const user_id = currentUser.user_id
+        return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
     }
 
     @UseGuards(GqlAuthAccessGuard)
