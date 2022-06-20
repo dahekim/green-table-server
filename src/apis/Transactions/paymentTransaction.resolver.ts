@@ -31,7 +31,7 @@ export class PaymentTransactionResolver {
     }
 
     @UseGuards(GqlAuthAccessGuard)
-    @Query(() => PaymentTransaction)
+    @Query(() => [PaymentTransaction])
     async fetchimpUidwithUserid(
         @Args('user_id') user_id: string,
     ) {
@@ -39,7 +39,7 @@ export class PaymentTransactionResolver {
     }
 
     @UseGuards(GqlAuthAccessGuard)
-    @Query(() => PaymentTransaction)
+    @Query(() => [PaymentTransaction])
     async fetchMyPayment(
         @CurrentUser() currentUser: ICurrentUser,
     ) {
