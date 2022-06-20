@@ -95,7 +95,7 @@ export class PaymentTransactionResolver {
             startDate: String(getToday()),
             endDate:String(oneMonthLater()) 
         })
-        console.log("🍕🍕🍕🍕🍕 저장완~ 베이직~~ ")ㄴ
+        console.log("🍕🍕🍕🍕🍕 저장완~ 프리미엄~~ ")
         // const user_id = currentUser.user_id
         // return this.paymentTransactionService.fetchimpUidwithUserid({ user_id })
         return "프리미엄 구독 결제가 완료되었습니다."
