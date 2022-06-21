@@ -34,7 +34,7 @@ import { RecipeScrapModule } from './apis/recipeScrap/recipeScrap.module';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: "10.178.0.2", 
+      host: "10.117.128.4", 
       // host: 'vegan-database',
       port: 3306,
       username: 'root',
