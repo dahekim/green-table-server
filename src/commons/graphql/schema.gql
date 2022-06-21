@@ -189,7 +189,7 @@ type Mutation {
   uploadProfileImage(file: Upload!): String!
   deleteProfileImage(user_id: String!): String!
   uploadCertificationImage(file: Upload!): String!
-  deleteUser(user_id: String!): String!
+  deleteUser(user_id: String!): Boolean!
 }
 
 input CreateRecipesInput {

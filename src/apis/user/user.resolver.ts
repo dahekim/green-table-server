@@ -1,19 +1,24 @@
-import { Mutation, Resolver, Query, Args } from "@nestjs/graphql"
+import { Mutation, Resolver, Query, Args, Context } from "@nestjs/graphql"
 import { User } from "./entities/user.entity"
 import { UserService } from "./user.service"
 import { UpdateUserInput } from "./dto/updateUser.input"
 import * as bcrypt from 'bcrypt'
+import * as jwt from 'jsonwebtoken'
 import { CurrentUser, ICurrentUser } from "src/commons/auth/gql-user.param"
-import { UseGuards } from "@nestjs/common"
+import { CACHE_MANAGER, Inject, UnauthorizedException, UseGuards } from "@nestjs/common"
 import { GqlAuthAccessGuard } from "src/commons/auth/gql-auth.guard"
 import { FileUpload, GraphQLUpload } from 'graphql-upload'
 import { getToday } from 'src/commons/libraries/utils';
+import { Cache } from 'cache-manager'
 
 
 @Resolver()
 export class UserResolver {
     constructor(
         private readonly userService: UserService,
+
+        @Inject(CACHE_MANAGER)
+        private readonly cacheManager: Cache,
     ) { }
 
     @UseGuards(GqlAuthAccessGuard)
@@ -114,8 +119,33 @@ export class UserResolver {
     @Mutation(()=> Boolean)
     async deleteUser(
         @Args('user_id') user_id: string,
+        @Context() context: any,
+        
     ) {
         const result = this.userService.delete({ user_id })
+
+        const accessToken = await context.req.headers.authorization.split(" ")[1]
+        const refreshToken = await context.req.headers.cookie.replace("refreshToken=", "")
+        try {
+            const myAccess = jwt.verify(accessToken, process.env.ACCESS_TOKEN)
+            const myRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN)
+            await this.cacheManager.set(
+                `accessToken : ${accessToken}`,
+                'accessToken',
+                { ttl: myAccess['exp'] - myAccess['iat'] }
+            )
+
+            await this.cacheManager.set(
+                `refreshToken : ${refreshToken}`,
+                'refreshToken',
+                { ttl: myRefresh['exp'] - myRefresh['iat'] }
+            )
+
+        } catch (error) {
+            if (error?.response?.data?.message) throw new UnauthorizedException("❌ 토큰값이 일치하지 않습니다.")
+            else throw new UnauthorizedException(error)
+        }
+        
         return result ? true: false
     }
 }
