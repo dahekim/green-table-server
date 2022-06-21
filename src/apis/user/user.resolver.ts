@@ -111,7 +111,7 @@ export class UserResolver {
     }
 
     @UseGuards(GqlAuthAccessGuard)
-    @Mutation(()=> String)
+    @Mutation(()=> Boolean)
     async deleteUser(
         @Args('user_id') user_id: string,
     ) {
