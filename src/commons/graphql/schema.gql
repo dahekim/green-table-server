@@ -169,8 +169,8 @@ type Mutation {
   login(email: String!, password: String!): String!
   logout: String!
   restoreAccessToken: String!
-  createBasicPayment(impUid: String!, amount: Float!): PaymentTransaction!
-  createPremiumPayment(impUid: String!, amount: Float!): PaymentTransaction!
+  createBasicPayment(impUid: String!, amount: Float!): String!
+  createPremiumPayment(impUid: String!, amount: Float!): String!
   cancelPaymentTransaction(impUid: String!): PaymentTransaction!
   createReply(contents: String!, id: String!): String!
   updateReply(reply_id: String!, recipe_id: String!, contents: String!): String!
@@ -189,7 +189,7 @@ type Mutation {
   uploadProfileImage(file: Upload!): String!
   deleteProfileImage(user_id: String!): String!
   uploadCertificationImage(file: Upload!): String!
-  deleteUser(user_id: String!): User!
+  deleteUser(user_id: String!): String!
 }
 
 input CreateRecipesInput {

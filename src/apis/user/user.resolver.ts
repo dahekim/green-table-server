@@ -111,10 +111,11 @@ export class UserResolver {
     }
 
     @UseGuards(GqlAuthAccessGuard)
-    @Mutation(()=>User)
+    @Mutation(()=> String)
     async deleteUser(
         @Args('user_id') user_id: string,
     ) {
-        return this.userService.delete({ user_id })
+        const result = this.userService.delete({ user_id })
+        return result ? true: false
     }
 }
