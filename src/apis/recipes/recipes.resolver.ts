@@ -110,7 +110,7 @@ export class RecipesResolver {
         @Args('recipe_id') id: string,
         @Args('updateRecipesInput') updateRecipesInput: UpdateRecipesInput,
     ) {
-        return await this.recipesService.update({ id, updateRecipesInput });
+        return await this.recipesService.update(id, { ...updateRecipesInput });
     }
 
     @UseGuards(GqlAuthAccessGuard)

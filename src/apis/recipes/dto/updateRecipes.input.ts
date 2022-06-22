@@ -16,13 +16,13 @@ export class UpdateRecipesInput {
     @Field(() => [String], { nullable: true })
     contentsUrl?: string[];
 
-    @Field(() => [String] , { nullable: true })
+    @Field(() => [String], { nullable: true })
     description?: string[];
 
     @Field(() => Int, { nullable: true })
     cookTime?: number;
 
-    @Field(() => String, { nullable: true })
+    @Field(() => String,{ nullable: true })
     level?: string;
 
     @Field(() => Int, { nullable: true })

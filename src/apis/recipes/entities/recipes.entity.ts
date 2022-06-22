@@ -65,7 +65,7 @@ export class Recipes {
     @Field(()=> [RecipesMainImage])
     recipesMainImage: RecipesMainImage[]
 
-    @OneToMany(() => RecipesContentsImage, (recipesContentsImage) => recipesContentsImage.recipes, { cascade: true })
+    @OneToMany(() => RecipesContentsImage, (recipesContentsImage) => recipesContentsImage.recipes, { cascade: true, nullable: true })
     @Field(() => [RecipesContentsImage])
     recipesContentsImage: RecipesContentsImage[];
     
@@ -78,7 +78,7 @@ export class Recipes {
     user?: User;
 
     @JoinTable()
-    @ManyToMany(() => RecipesIngredients, (ingredients) => ingredients.recipes)
+    @ManyToMany(() => RecipesIngredients, (ingredients) => ingredients.recipes, {nullable: true})
     @Field(() => [RecipesIngredients])
     ingredients: RecipesIngredients[];
 

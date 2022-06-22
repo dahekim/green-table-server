@@ -350,7 +350,7 @@ export class RecipesService {
         }
     }
 
-    async update({ id, updateRecipesInput }) {
+    async update(id, { ...updateRecipesInput }) {
         const recipe = await this.recipesRepository.findOne({
             where: { id }
         });

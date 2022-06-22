@@ -8,7 +8,7 @@ export class CreateRecipesInput {
     @Field(() => String)
     summary: string;
 
-    @Field(() => [String])
+    @Field(() => String)
     types: string;
 
     @Field(() => [String])
@@ -23,7 +23,7 @@ export class CreateRecipesInput {
     @Field(() => Int)
     cookTime: number;
 
-    @Field(() => [String])
+    @Field(() => String)
     level: string;
 
     @Field(() => Int)
