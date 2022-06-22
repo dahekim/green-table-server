@@ -351,12 +351,12 @@ export class RecipesService {
     }
 
     async update({ id, updateRecipesInput }) {
-        const prevRecipe = await this.recipesRepository.findOne({
+        const recipe = await this.recipesRepository.findOne({
             where: { id }
         });
 
         const result = {
-            ...prevRecipe,
+            ...recipe,
             ...updateRecipesInput,
         }
         return await this.recipesRepository.save(result);

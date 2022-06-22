@@ -16,9 +16,6 @@ export enum CATEGORY_TYPES {
     PESCO = 'PESCO',
     POLLO = 'POLLO',
 };
-registerEnumType(CATEGORY_TYPES, {
-    name: 'CATEGORY_TYPES',
-});
 
 export enum COOKING_LEVEL {
     SIMPLE = 'SIMPLE',
@@ -29,6 +26,9 @@ registerEnumType(COOKING_LEVEL, {
     name: 'COOKING_LEVEL',
 });
 
+registerEnumType(CATEGORY_TYPES, {
+    name: 'CATEGORY_TYPES',
+});
 
 @Entity()
 @ObjectType()
@@ -61,7 +61,7 @@ export class Recipes {
     @Field(() => Int)
     serve: number;
 
-    @OneToMany(()=> RecipesMainImage, (recipesMainImage)=>recipesMainImage.recipes, {cascade: true} )
+    @OneToMany(()=> RecipesMainImage, (recipesMainImage)=>recipesMainImage.recipes, { cascade: true } )
     @Field(()=> [RecipesMainImage])
     recipesMainImage: RecipesMainImage[]
 

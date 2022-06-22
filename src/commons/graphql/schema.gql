@@ -209,12 +209,12 @@ input CreateRecipesInput {
 input UpdateRecipesInput {
   title: String
   summary: String
-  types: [String!]
+  types: String
   mainUrl: [String!]
   contentsUrl: [String!]
   description: [String!]
   cookTime: Int
-  level: [String!]
+  level: String
   serve: Int
   ingredients: [String!]
   recipesTags: [String!]
