@@ -9,5 +9,10 @@ export const getToday = () => {
 }
 
 export const oneMonthLater = () => {
-    return  new Date( new Date().getFullYear(), new Date().getMonth()+2, new Date().getDate())
+    const date = new Date()
+    const yyyy = date.getFullYear()
+    const mm = date.getMonth() + 2
+    const dd = date.getDate()
+
+    return `${yyyy}/${mm}/${dd}`
 }

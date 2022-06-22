@@ -354,7 +354,6 @@ export class RecipesService {
         const recipe = await this.recipesRepository.findOne({
             where: { id }
         });
-
         const result = {
             ...recipe,
             ...updateRecipesInput,
