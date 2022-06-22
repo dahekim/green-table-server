@@ -108,9 +108,10 @@ export class RecipesResolver {
     @Mutation(() => Recipes)
     async updateRecipe(
         @Args('recipe_id') id: string,
+        @CurrentUser() currentUser: ICurrentUser,
         @Args('updateRecipesInput') updateRecipesInput: UpdateRecipesInput,
     ) {
-        return await this.recipesService.update(id, { ...updateRecipesInput });
+        return await this.recipesService.update(id, currentUser, { ...updateRecipesInput });
     }
 
     @UseGuards(GqlAuthAccessGuard)

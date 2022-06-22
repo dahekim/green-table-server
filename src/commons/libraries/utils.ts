@@ -5,7 +5,7 @@ export const getToday = () => {
     const mm = date.getMonth() + 1
     const dd = date.getDate()
 
-    return `${yyyy}/${mm}/${dd}`
+    return `${yyyy}.${mm}.${dd}`
 }
 
 export const oneMonthLater = () => {
@@ -14,5 +14,5 @@ export const oneMonthLater = () => {
     const mm = date.getMonth() + 2
     const dd = date.getDate()
 
-    return `${yyyy}/${mm}/${dd}`
+    return `${yyyy}.${mm}.${dd}`
 }

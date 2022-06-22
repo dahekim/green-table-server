@@ -9,6 +9,7 @@ import { RecipesContentsImage } from "../recipesContentsImage/entities/recipesCo
 import { RecipesIngredients } from "../recipesIngrediants/entities/recipesIngrediants.entity";
 import { RecipesTag } from "../recipesTag/entities/recipesTag.entity";
 import { RecipesMainImage } from "../recipesMainImage/entities/recipesMainImage.entity";
+import { UpdateRecipesInput } from "./dto/updateRecipes.input";
 
 interface IFile {
     files: FileUpload[]
@@ -350,15 +351,96 @@ export class RecipesService {
         }
     }
 
-    async update(id, { ...updateRecipesInput }) {
-        const recipe = await this.recipesRepository.findOne({
-            where: { id }
-        });
-        const result = {
-            ...recipe,
-            ...updateRecipesInput,
+    async update(id, currentUser, { ...updateRecipesInput }) {
+        try {
+            const { mainUrl, contentsUrl, ...rest } = updateRecipesInput
+            const { description, ingredients, recipesTags, ...recipes } = rest
+            const recipe = await this.recipesRepository.findOne({
+                where: { id }
+            })
+
+            const user = await this.userRepository.findOne(
+                currentUser,
+                { where: { user_id: currentUser.user_id } }
+            )
+
+            const ingredientTags = [];
+            const ingredientLength = ingredients.length ? ingredients : 0
+            
+            
+            for (let i = 0; i < ingredientLength; i++) {
+                const ingredientTag = ingredients[i].replace('#', '');
+                const prevTag = await this.recipesIngredientsRepository.findOne({
+                    name: ingredientTag
+                });
+
+                if (prevTag) {
+                    ingredientTags.push(prevTag);
+                } else {
+                    const newTag = await this.recipesIngredientsRepository.save({ name: ingredientTag });
+                    ingredientTags.push(newTag);
+                }
+            }
+            
+
+            const recipeTags = []
+            const tagLength = recipeTags.length ? recipeTags : 0
+
+            console.log("😡😡😡😡"+ recipeTags)
+            for (let i = 0; i < tagLength; i++) {
+                const recipeTag = recipesTags[i].replace('#', '');
+                const prevTags = await this.recipesTagRepository.findOne({
+                    name: recipeTag
+                });
+
+                if (prevTags) {
+                    recipeTags.push(prevTags);
+                } else {
+                    const newTags = await this.recipesTagRepository.save({
+                        name: recipeTag,
+                    })
+                    recipeTags.push(newTags);
+                }
+            }
+            
+
+            const result = await this.recipesRepository.save({
+                ...recipes,
+                user: user,
+                ingredients: ingredientTags,
+                recipesTags: recipeTags,
+            });
+            
+
+            this.recipesMainImageRepository.delete({ recipes: recipe })
+            this.recipesContentsImageRepository.delete({ recipes: recipe })
+
+
+            for (let i = 0; i < mainUrl.length; i++) {
+                await this.recipesMainImageRepository.save({
+                    mainUrl: mainUrl[i],
+                    recipes: result
+                });
+            }
+
+            for (let i = 0; i < contentsUrl.length; i++) {
+                await this.recipesContentsImageRepository.save({
+                    contentsUrl: contentsUrl[i],
+                    description: description[i],
+                    recipes: result
+                });
+            }
+            return await result;
+
+        } catch (error) {
+            console.log(error)
+            if (error?.response?.data?.message || error?.response?.status) {
+                console.log(error.response.data.message);
+                console.log(error.response.status);
+            } else {
+                throw error;
+            }
         }
-        return await this.recipesRepository.save(result);
     }
 
     async delete({ id, currentUser }) {
