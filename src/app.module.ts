@@ -25,7 +25,7 @@ import { RecipeScrapModule } from './apis/recipeScrap/recipeScrap.module';
       autoSchemaFile: 'src/commons/graphql/schema.gql',
       context: ({ req, res }) => ({ req, res }),
       cors: {
-        origin: 'http://localhost:3000',
+        origin: ['http://localhost:3000', 'https://vegantable.shop'],
         credentials: true,
       },
       bodyParserConfig: {

@@ -27,7 +27,7 @@ export class AuthService {
 
 
         // 배포환경
-        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+        res.setHeader('Access-Control-Allow-Origin', 'https://vegantable.shop')
         res.setHeader('Access-Control-Allow-Credentials', 'true');
         res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
         res.setHeader(
@@ -50,9 +50,9 @@ export class AuthService {
             const newUser = { ...rest, password }
             user = await this.userService.createSocial({ ...newUser })
             this.setRefreshToken({ user, res })
-            res.redirect("http://localhost:3000")
+            res.redirect('https://vegantable.shop')
         }
         this.setRefreshToken({ user, res })
-        res.redirect("http://localhost:3000")
+        res.redirect('https://vegantable.shop')
     }
 }

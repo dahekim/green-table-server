@@ -11,7 +11,7 @@ async function bootstrap() {
   app.use(graphqlUploadExpress())
   app.use(json({ limit: '100mb' }))
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'https://vegantable.shop'],
     credentials: true,
   })
   await app.listen(3000)
