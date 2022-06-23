@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FileUpload } from "graphql-upload";
 import { Brackets, getConnection, getRepository, Repository } from "typeorm";
@@ -351,86 +351,114 @@ export class RecipesService {
         }
     }
 
-    async update(id, currentUser, { ...updateRecipesInput }) {
+    async update({id, currentUser, updateRecipesInput }) {
         try {
-            const { mainUrl, contentsUrl, ...rest } = updateRecipesInput
-            const { description, ingredients, recipesTags, ...recipes } = rest
-            const recipe = await this.recipesRepository.findOne({
-                where: { id }
-            })
-
             const user = await this.userRepository.findOne(
                 currentUser,
                 { where: { user_id: currentUser.user_id } }
             )
+            if(!user){ 
+                throw new UnauthorizedException("게시글 수정은 게시자 본인만 가능합니다.")
+            }
+            const { mainUrl, contentsUrl, description, ...rest } = updateRecipesInput
+            const { ingredients, recipesTags, ...recipes } = rest
+            
+            const recipe = await this.recipesRepository.findOne({
+                where: { id }
+            })
 
             const ingredientTags = [];
-            const ingredientLength = ingredients.length ? ingredients : 0
+
+            let iLength;
+            if(ingredients=== undefined) iLength = 0
+            else iLength = ingredients.length
             
-            
-            for (let i = 0; i < ingredientLength; i++) {
-                const ingredientTag = ingredients[i].replace('#', '');
-                const prevTag = await this.recipesIngredientsRepository.findOne({
-                    name: ingredientTag
-                });
-
-                if (prevTag) {
-                    ingredientTags.push(prevTag);
-                } else {
-                    const newTag = await this.recipesIngredientsRepository.save({ name: ingredientTag });
-                    ingredientTags.push(newTag);
-                }
-            }
-            
-
-            const recipeTags = []
-            const tagLength = recipeTags.length ? recipeTags : 0
-
-            console.log("😡😡😡😡"+ recipeTags)
-            for (let i = 0; i < tagLength; i++) {
-                const recipeTag = recipesTags[i].replace('#', '');
-                const prevTags = await this.recipesTagRepository.findOne({
-                    name: recipeTag
-                });
-
-                if (prevTags) {
-                    recipeTags.push(prevTags);
-                } else {
-                    const newTags = await this.recipesTagRepository.save({
-                        name: recipeTag,
+            if(iLength > 0) {
+                for (let i = 0; i < iLength ; i++) {
+                    const ingredientTag = ingredients[i]
+                    const prevTag = await this.recipesIngredientsRepository.findOne({
+                        name: ingredientTag
                     })
-                    recipeTags.push(newTags);
+                    if (prevTag) {
+                        ingredientTags.push(prevTag)
+                        
+                    } else {
+                        const newTag = await this.recipesIngredientsRepository.save({ name: ingredientTag });
+                        ingredientTags.push(newTag);
+                    }
                 }
             }
             
+            const tags = []
 
-            const result = await this.recipesRepository.save({
-                ...recipes,
-                user: user,
-                ingredients: ingredientTags,
-                recipesTags: recipeTags,
-            });
+            let tLength;
+            if(recipesTags === undefined) tLength = 0
+            else tLength = recipesTags.length
             
+            if(tLength > 0){
+                for (let i = 0; i < tLength; i++) {
+                    const recipeTag = recipesTags[i].replace('#', '');
+                    const prevTag = await this.recipesTagRepository.findOne({
+                        name: recipeTag
+                    });
 
-            this.recipesMainImageRepository.delete({ recipes: recipe })
-            this.recipesContentsImageRepository.delete({ recipes: recipe })
-
-
-            for (let i = 0; i < mainUrl.length; i++) {
-                await this.recipesMainImageRepository.save({
-                    mainUrl: mainUrl[i],
-                    recipes: result
-                });
+                    if (prevTag) {
+                        tags.push(prevTag);
+                    } else {
+                        const newTag = await this.recipesTagRepository.save({
+                            name: recipeTag,
+                        })
+                        tags.push(newTag);
+                    }
+                }
             }
 
-            for (let i = 0; i < contentsUrl.length; i++) {
-                await this.recipesContentsImageRepository.save({
-                    contentsUrl: contentsUrl[i],
-                    description: description[i],
-                    recipes: result
-                });
+            const updateRecipe = {
+                ...recipes,
+                id: recipe.id,
+                ingredients: ingredientTags,
+                recipesTags: tags,
             }
-            return await result;
+
+            const mainArr = []
+            if (mainUrl){
+                this.recipesMainImageRepository.delete({ recipes:recipe } )
+                
+                const mLength = mainUrl.length
+                for (let i = 0; i < mLength; i++) {
+                    const newMain = await this.recipesMainImageRepository.save({
+                        mainUrl: mainUrl[i],
+                        recipes: updateRecipe
+                    })
+                    mainArr.push(newMain)
+                }
+            }
+
+            const contentsArr = []
+            if(contentsUrl){
+                this.recipesContentsImageRepository.delete({ recipes:recipe } )
+
+                const cLength = contentsUrl.length
+                for (let i = 0; i < cLength; i++) {
+                    const newContent = await this.recipesContentsImageRepository.save({
+                        contentsUrl: contentsUrl[i],
+                        description: description[i],
+                        recipes: updateRecipe
+                    })
+                    contentsArr.push(newContent)
+                }
+            }
+
+            const result = {
+                ...recipes,
+                id: recipe.id,
+                ingredients: ingredientTags,
+                recipesTags: tags,
+                recipesMainImage: mainArr,
+                recipesContentsImage: contentsArr,
+            }
+
+            return await this.recipesRepository.save(result);
 
         } catch (error) {
             console.log(error)

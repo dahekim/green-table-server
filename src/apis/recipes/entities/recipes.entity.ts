@@ -37,11 +37,11 @@ export class Recipes {
     @Field(() => String)
     id: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     @Field(() => String!)
     title!: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     @Field(() => String!)
     summary!: string;
 

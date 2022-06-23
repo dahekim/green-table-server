@@ -111,7 +111,7 @@ export class RecipesResolver {
         @CurrentUser() currentUser: ICurrentUser,
         @Args('updateRecipesInput') updateRecipesInput: UpdateRecipesInput,
     ) {
-        return await this.recipesService.update(id, currentUser, { ...updateRecipesInput });
+        return await this.recipesService.update({id, currentUser, updateRecipesInput });
     }
 
     @UseGuards(GqlAuthAccessGuard)

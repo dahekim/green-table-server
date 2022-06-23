@@ -23,7 +23,7 @@ type RecipesContentsImage {
 
 type RecipesMainImage {
   mainImage_id: Int!
-  mainUrl: String!
+  mainUrl: String
   recipes: Recipes!
 }
 

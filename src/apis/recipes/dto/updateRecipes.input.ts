@@ -2,10 +2,10 @@ import { Field, InputType, Int } from "@nestjs/graphql";
 @InputType()
 export class UpdateRecipesInput {
     @Field(() => String, { nullable: true })
-    title: string;
+    title?: string;
 
     @Field(() => String, { nullable: true })
-    summary: string;
+    summary?: string;
 
     @Field(() => String, { nullable: true })
     types: string;
